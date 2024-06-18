@@ -11,22 +11,24 @@ type RouterGroup struct {
 	*gin.RouterGroup
 }
 
+func GlobalExceptionHandler(c *gin.Context) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("Recovered from panic: %v", r)
+			// 构造异常返回体
+			// 返回异常信息给客户端
+			res.FailWithoutMsg(r, c)
+			c.Abort()
+		}
+	}()
+	c.Next()
+
+}
 func InitRoutes() *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.Default())
 	// 设置全局异常处理中间件
-	r.Use(func(c *gin.Context) {
-		defer func() {
-			if r := recover(); r != nil {
-				log.Printf("Recovered from panic: %v", r)
-				// 构造异常返回体
-				// 返回异常信息给客户端
-				res.FailWithoutMsg(r, c)
-				c.Abort()
-			}
-		}()
-		c.Next()
-	})
+	r.Use(GlobalExceptionHandler)
 	routerGroup := r.Group("/api")
 	routerGroupApp := RouterGroup{routerGroup}
 
