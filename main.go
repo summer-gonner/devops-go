@@ -7,6 +7,11 @@ import (
 	"log"
 )
 
+// @title Devops-Go
+// @version 1.0
+// @description This is a sample Gin API with Swagger documentation.
+// @host localhost:8082
+// @BasePath /api
 func main() {
 	framework.InitApplicationYaml()
 	global.DB = framework.InitXorm() //初始化数据库

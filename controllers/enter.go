@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"devops-go/common/res"
+	_ "devops-go/docs"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
 )
 
@@ -29,6 +32,7 @@ func InitRoutes() *gin.Engine {
 	r.Use(cors.Default())
 	// 设置全局异常处理中间件
 	r.Use(GlobalExceptionHandler)
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	routerGroup := r.Group("/api")
 	routerGroupApp := RouterGroup{routerGroup}
 
