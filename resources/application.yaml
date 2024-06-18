@@ -1,0 +1,10 @@
+server:
+  port: 8082
+  appName: devops-go
+datasource:
+  type: mysql
+  host: rm-bp175i9yux3f5w3t5so.mysql.rds.aliyuncs.com
+  port: 3306
+  username: root
+  password: Sy122812
+  dbname: devops
