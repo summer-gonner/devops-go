@@ -24,8 +24,14 @@ type AuthServiceImpl struct {
 	authMapper mappers.AuthMapper
 }
 
-// InitAuthServiceImpl 创建 AuthServiceImpl 实例
-
+// @Summary 登录
+// @Description 登录接口
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param requestBody body request.LoginRequest true "登录请求体"
+// @Success 200 {object} vo.LoginVo
+// @Router /auth/login [post]
 func (asi AuthServiceImpl) Login(c *gin.Context) {
 	var loginRequest request.LoginRequest
 	if err := c.ShouldBindJSON(&loginRequest); err != nil {
@@ -45,10 +51,23 @@ func (asi AuthServiceImpl) Login(c *gin.Context) {
 
 }
 
+// @Summary 退出登录
+// @Description 退出登录接口
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Router /auth/logout [post]
 func (asi AuthServiceImpl) Logout(c *gin.Context) {
 	res.SuccessWithoutMsg("退出登录成功", c)
 
 }
+
+// @Summary 检查 Token
+// @Description 检查 Token 是否有效
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Router /auth/checkToken [get]
 func (asi AuthServiceImpl) CheckToken(c *gin.Context) {
 	res.SuccessWithoutMsg("token生效", c)
 }

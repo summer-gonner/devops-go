@@ -9,7 +9,7 @@ import (
 
 // @title Devops-Go
 // @version 1.0
-// @description This is a sample Gin API with Swagger documentation.
+// @description Devops-Go接口文档
 // @host localhost:8082
 // @BasePath /api
 func main() {

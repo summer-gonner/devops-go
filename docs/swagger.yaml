@@ -1,9 +1,0 @@
-basePath: /api
-host: localhost:8082
-info:
-  contact: {}
-  description: This is a sample Gin API with Swagger documentation.
-  title: Devops-Go
-  version: "1.0"
-paths: {}
-swagger: "2.0"
