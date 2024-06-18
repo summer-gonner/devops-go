@@ -1,5 +1,5 @@
 package mappers
 
 type AuthMapper interface {
-	QueryUserByUsernameAndPassword(username string) *User
+	QueryUserByUsernameAndPassword(username string, password string) *User
 }

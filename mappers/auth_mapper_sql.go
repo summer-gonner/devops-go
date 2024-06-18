@@ -19,13 +19,17 @@ func (User) TableName() string {
 }
 
 // QueryUserByUsernameAndPassword 根据用户名和密码查询用户信息
-func (ams AuthMapperSql) QueryUserByUsernameAndPassword(username string) *User {
+func (ams AuthMapperSql) QueryUserByUsernameAndPassword(username string, password string) *User {
 	user := new(User)
-	_, err := global.DB.Where("username = ?", username).Get(user)
+	has, err := global.DB.Where("username = ?", username).And("password=?", password).Get(user)
 	if err != nil {
 		fmt.Println("Error querying user:", err)
 		return nil
 	}
-	log.Printf("user: %s", user)
+	if !has {
+		fmt.Println("User not found")
+		return nil
+	}
+	log.Printf("Found user: %s", user)
 	return user
 }

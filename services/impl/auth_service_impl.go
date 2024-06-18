@@ -8,15 +8,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AuthServiceImpl struct {
-	authMapper mappers.AuthMapper
-}
+var authServiceInstance *AuthServiceImpl
 
 func InitAuthServerImpl() *AuthServiceImpl {
-	authMapper := mappers.AuthMapperSql{} // 使用具体的实现类来初始化 authMapper
-	return &AuthServiceImpl{
-		authMapper: &authMapper, // 使用指针类型来确保不是 nil
+	if authServiceInstance == nil {
+		authMapper := mappers.AuthMapperSql{} // 使用具体的实现类来初始化 authMapper
+		authServiceInstance = &AuthServiceImpl{
+			authMapper: &authMapper, // 使用指针类型来确保不是 nil
+		}
 	}
+	return authServiceInstance
+}
+
+type AuthServiceImpl struct {
+	authMapper mappers.AuthMapper
 }
 
 // InitAuthServiceImpl 创建 AuthServiceImpl 实例
@@ -27,9 +32,10 @@ func (asi AuthServiceImpl) Login(c *gin.Context) {
 		res.Fail("", "Invalid JSON format", c)
 		return
 	}
-	loginUser := InitAuthServerImpl().authMapper.QueryUserByUsernameAndPassword(loginRequest.Username)
-	if loginUser == nil {
+	loginUser := InitAuthServerImpl().authMapper.QueryUserByUsernameAndPassword(loginRequest.Username, loginRequest.Password)
+	if loginUser == nil && loginUser.Id == 0 {
 		res.Fail("", "用户名或者密码不对", c)
+		return
 	} else {
 		var loginVo vo.LoginVo
 		loginVo.Username = loginUser.Username
