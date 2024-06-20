@@ -1,9 +1,9 @@
 package main
 
 import (
-	"devops-go/common/global"
-	"devops-go/controllers"
-	"devops-go/framework"
+	"devops-go/basicdata/common/global"
+	"devops-go/basicdata/controllers"
+	"devops-go/basicdata/framework"
 	"log"
 )
 
