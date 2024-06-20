@@ -1,8 +1,8 @@
 package framework
 
 import (
-	"devops-go/common/global"
-	"devops-go/config"
+	"devops-go/basicdata/common/global"
+	"devops-go/basicdata/config"
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"os"

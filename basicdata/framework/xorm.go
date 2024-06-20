@@ -1,7 +1,7 @@
 package framework
 
 import (
-	"devops-go/common/global"
+	"devops-go/basicdata/common/global"
 	_ "github.com/go-sql-driver/mysql" //必须导入这个包
 	"log"
 	"xorm.io/xorm"

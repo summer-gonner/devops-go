@@ -1,7 +1,7 @@
 package global
 
 import (
-	"devops-go/config"
+	"devops-go/basicdata/config"
 	"xorm.io/xorm"
 )
 

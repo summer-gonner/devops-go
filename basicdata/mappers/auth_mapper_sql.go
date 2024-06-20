@@ -1,8 +1,8 @@
 package mappers
 
 import (
-	"devops-go/common/global"
-	"devops-go/models/entity"
+	"devops-go/basicdata/common/global"
+	"devops-go/basicdata/models/entity"
 	"fmt"
 	"log"
 )

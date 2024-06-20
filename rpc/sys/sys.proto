@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package sysclient;
+
+option go_package = "./sysclient";
+
+message InfoReq{
+  int64 UserId = 1;
+}
+message InfoResp{
+  string avatar =1;
+  string name = 2;
+  repeated MenuListTree menuListTree = 3;
+  repeated string backgroundUrls=4;
+  bool resetPwd=5;
+}
+
+message MenuListTree{
+  int64 id=1;
+  string name=2;
+  string icon=3;
+  int64 parentId=4;
+  string path=5;
+  string vuePath=6;
+  string vueComponent=7;
+  string vueIcon=8;
+  string vueRedirect=9;
+  string backgroundUrl=10;
+}
+
+message UserAddReq{
+  string name=1;
+  string nickName=2;
+  string password=3;
+  string email=4;
+  int64 roleId=5;
+  int64 status=6;
+  string createBy=7;
+}
+
+message  UserAddResp{
+  int64 id=1;
+}
+
+service Sys{
+  rpc UserInfo(InfoReq)returns(InfoResp);
+  rpc UserAdd(UserAddReq)returns(UserAddResp);
+}
+
+

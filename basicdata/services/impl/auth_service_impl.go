@@ -1,10 +1,10 @@
 package impl
 
 import (
-	"devops-go/common/res"
-	"devops-go/mappers"
-	"devops-go/models/request"
-	"devops-go/models/vo"
+	"devops-go/basicdata/common/res"
+	"devops-go/basicdata/mappers"
+	"devops-go/basicdata/models/request"
+	"devops-go/basicdata/models/vo"
 	"github.com/gin-gonic/gin"
 )
 

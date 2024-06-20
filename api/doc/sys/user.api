@@ -1,0 +1,79 @@
+syntax = "v1"
+
+info (
+	title:  "用户相关"
+	desc:   "用户相关"
+	author: "allen.shen"
+)
+
+type (
+	UserInfoResp {
+		Code    int64        `json:"code"`
+		Message string       `json:"message"`
+		Data    UserInfoData `json:"data"`
+	}
+	UserInfoData {
+		Avatar      string             `json:"avatar"`
+		Name        string             `json:"name"`
+		MenuTree    []*ListMenuTree    `json:"menuTree"`
+		MenuTreeVue []*ListMenuTreeVue `json:"menuTreeVue"`
+		ResetPwd    bool               `json:"resetPwd,default=false"`
+	}
+	ListMenuTree {
+		Id       int64  `json:"id"`
+		Path     string `json:"path"`
+		Name     string `json:"name"`
+		ParentId int64  `json:"parentId"`
+		Icon     string `json:"icon"`
+	}
+	ListMenuTreeVue {
+		Id           int64        `json:"id"`
+		ParentId     int64        `json:"parentId"`
+		Title        string       `json:"title"`
+		Path         string       `json:"path"`
+		Name         string       `json:"name"`
+		Icon         string       `json:"icon"`
+		VueRedirent  string       `json:"vueRedirent"`
+		VueComponent string       `json:"vueComponent"`
+		Meta         MenuTreeMeta `json:"meta"`
+	}
+	MenuTreeMeta {
+		Title string `json:"title"`
+		Icon  string `json:"icon"`
+	}
+	AddUserReq {
+		Name     string `json:"name"`
+		NickName string `json:"nickName"`
+		Password string `json:"password,optional"`
+		Email    string `json:"email"`
+		RoleId   int64  `json:"roleId"`
+		Status   int64  `json:"status,default=1"`
+	}
+	AddUserResp {
+		Code    int64           `json:"code"`
+		Message string          `json:"message"`
+		Data    ReceiptUserData `json:"data"`
+	}
+	ReceiptUserData {
+		Id int64 `json:"id"`
+	}
+)
+
+@server (
+	group:  sys/user
+	prefix: /sys/user
+)
+service admin-api {
+	@doc (
+		summary: "用户管理-获取当前用户信息"
+	)
+	@handler UserInfo
+	get /currentUser returns (UserInfoResp)
+
+	@doc (
+		summary: "用户管理-新增用户"
+	)
+	@handler UserAdd
+	post /add (AddUserReq) returns (AddUserResp)
+}
+

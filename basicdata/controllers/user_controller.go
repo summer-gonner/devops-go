@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"devops-go/services"
-	"devops-go/services/impl"
+	"devops-go/basicdata/services"
+	"devops-go/basicdata/services/impl"
 )
 
 func (router RouterGroup) UserController() {

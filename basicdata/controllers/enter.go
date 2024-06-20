@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"devops-go/common/res"
-	_ "devops-go/docs"
+	"devops-go/basicdata/common/res"
+	_ "devops-go/basicdata/docs"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
