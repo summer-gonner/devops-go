@@ -1,6 +1,8 @@
 package rpcerror
 
-import "devops-go/common/errors"
+import (
+	"devops-go/common/errors"
+)
 
 var _ errors.CommonError = (*RpcError)(nil)
 
