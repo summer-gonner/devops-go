@@ -7,4 +7,10 @@ type Config struct {
 	Mysql struct {
 		Datasource string
 	}
+	RedisConf struct {
+		Host string
+		Type string `json:",default=node,options=node|cluster"`
+		Pass string `json:",optional"`
+		Tls  bool   `json:",optional"`
+	}
 }

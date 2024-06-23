@@ -8,3 +8,9 @@ Etcd:
 
 Mysql:
   Datasource: root:Sy122812@tcp(rm-bp175i9yux3f5w3t5so.mysql.rds.aliyuncs.com:3306)/devops?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+# Redis配置
+RedisConf:
+  Host: 192.168.2.204:6379
+  Type: node
+  Pass: "123456789"
+  Tls: false

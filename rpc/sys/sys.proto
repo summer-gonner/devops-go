@@ -45,6 +45,23 @@ message  UserAddResp{
 service Sys{
   rpc UserInfo(InfoReq)returns(InfoResp);
   rpc UserAdd(UserAddReq)returns(UserAddResp);
+  rpc RedisAdd(RedisReq)returns(RedisResp);
+  rpc RedisDelete(RedisReq) returns(RedisResp);
+  rpc RedisUpdate(RedisReq) returns(RedisResp);
+  rpc RedisGet(RedisReq)returns(RedisResp);
 }
 
+message  RedisReq{
+  string  name=1;
+  string  nickName=2;
+  string  password =3;
+  string  email =4;
+  string  key=5;
+}
+message RedisResp{
+  string  name=1;
+  string  nickName=2;
+  string  password=3;
+  string  email =4;
+}
 

@@ -3,21 +3,29 @@ package svc
 import (
 	"devops-go/rpc/model/model/sysmodel"
 	"devops-go/rpc/sys/internal/config"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type ServiceContext struct {
-	Config config.Config
-
-	UserModel sysmodel.SysUserModel
+	Config      config.Config
+	RedisClient *redis.Redis
+	UserModel   sysmodel.SysUserModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	sqlConn := sqlx.NewMysql(c.Mysql.Datasource)
 
-	return &ServiceContext{
-		Config: c,
+	conf := redis.RedisConf{
+		Host: c.RedisConf.Host,
+		Type: c.RedisConf.Type,
+		Pass: c.RedisConf.Pass,
+		Tls:  c.RedisConf.Tls,
+	}
 
-		UserModel: sysmodel.NewSysUserModel(sqlConn),
+	return &ServiceContext{
+		Config:      c,
+		RedisClient: redis.MustNewRedis(conf),
+		UserModel:   sysmodel.NewSysUserModel(sqlConn),
 	}
 }

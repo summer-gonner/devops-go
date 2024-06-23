@@ -1,0 +1,8 @@
+import "sys/user.api"
+import "sys/redis.api"
+
+info (
+    title:  "devops-go"
+    desc:   "devops-go"
+    author: "allen.shen"
+)

@@ -31,3 +31,23 @@ func (s *SysServer) UserAdd(ctx context.Context, in *sysclient.UserAddReq) (*sys
 	l := logic.NewUserAddLogic(ctx, s.svcCtx)
 	return l.UserAdd(in)
 }
+
+func (s *SysServer) RedisAdd(ctx context.Context, in *sysclient.RedisReq) (*sysclient.RedisResp, error) {
+	l := logic.NewRedisAddLogic(ctx, s.svcCtx)
+	return l.RedisAdd(in)
+}
+
+func (s *SysServer) RedisDelete(ctx context.Context, in *sysclient.RedisReq) (*sysclient.RedisResp, error) {
+	l := logic.NewRedisDeleteLogic(ctx, s.svcCtx)
+	return l.RedisDelete(in)
+}
+
+func (s *SysServer) RedisUpdate(ctx context.Context, in *sysclient.RedisReq) (*sysclient.RedisResp, error) {
+	l := logic.NewRedisUpdateLogic(ctx, s.svcCtx)
+	return l.RedisUpdate(in)
+}
+
+func (s *SysServer) RedisGet(ctx context.Context, in *sysclient.RedisReq) (*sysclient.RedisResp, error) {
+	l := logic.NewRedisGetLogic(ctx, s.svcCtx)
+	return l.RedisGet(in)
+}

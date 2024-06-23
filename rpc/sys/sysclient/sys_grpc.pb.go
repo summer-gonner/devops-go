@@ -19,8 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	Sys_UserInfo_FullMethodName = "/sysclient.Sys/UserInfo"
-	Sys_UserAdd_FullMethodName  = "/sysclient.Sys/UserAdd"
+	Sys_UserInfo_FullMethodName    = "/sysclient.Sys/UserInfo"
+	Sys_UserAdd_FullMethodName     = "/sysclient.Sys/UserAdd"
+	Sys_RedisAdd_FullMethodName    = "/sysclient.Sys/RedisAdd"
+	Sys_RedisDelete_FullMethodName = "/sysclient.Sys/RedisDelete"
+	Sys_RedisUpdate_FullMethodName = "/sysclient.Sys/RedisUpdate"
+	Sys_RedisGet_FullMethodName    = "/sysclient.Sys/RedisGet"
 )
 
 // SysClient is the client API for Sys service.
@@ -29,6 +33,10 @@ const (
 type SysClient interface {
 	UserInfo(ctx context.Context, in *InfoReq, opts ...grpc.CallOption) (*InfoResp, error)
 	UserAdd(ctx context.Context, in *UserAddReq, opts ...grpc.CallOption) (*UserAddResp, error)
+	RedisAdd(ctx context.Context, in *RedisReq, opts ...grpc.CallOption) (*RedisResp, error)
+	RedisDelete(ctx context.Context, in *RedisReq, opts ...grpc.CallOption) (*RedisResp, error)
+	RedisUpdate(ctx context.Context, in *RedisReq, opts ...grpc.CallOption) (*RedisResp, error)
+	RedisGet(ctx context.Context, in *RedisReq, opts ...grpc.CallOption) (*RedisResp, error)
 }
 
 type sysClient struct {
@@ -59,12 +67,56 @@ func (c *sysClient) UserAdd(ctx context.Context, in *UserAddReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *sysClient) RedisAdd(ctx context.Context, in *RedisReq, opts ...grpc.CallOption) (*RedisResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RedisResp)
+	err := c.cc.Invoke(ctx, Sys_RedisAdd_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sysClient) RedisDelete(ctx context.Context, in *RedisReq, opts ...grpc.CallOption) (*RedisResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RedisResp)
+	err := c.cc.Invoke(ctx, Sys_RedisDelete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sysClient) RedisUpdate(ctx context.Context, in *RedisReq, opts ...grpc.CallOption) (*RedisResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RedisResp)
+	err := c.cc.Invoke(ctx, Sys_RedisUpdate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sysClient) RedisGet(ctx context.Context, in *RedisReq, opts ...grpc.CallOption) (*RedisResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RedisResp)
+	err := c.cc.Invoke(ctx, Sys_RedisGet_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SysServer is the server API for Sys service.
 // All implementations must embed UnimplementedSysServer
 // for forward compatibility
 type SysServer interface {
 	UserInfo(context.Context, *InfoReq) (*InfoResp, error)
 	UserAdd(context.Context, *UserAddReq) (*UserAddResp, error)
+	RedisAdd(context.Context, *RedisReq) (*RedisResp, error)
+	RedisDelete(context.Context, *RedisReq) (*RedisResp, error)
+	RedisUpdate(context.Context, *RedisReq) (*RedisResp, error)
+	RedisGet(context.Context, *RedisReq) (*RedisResp, error)
 	mustEmbedUnimplementedSysServer()
 }
 
@@ -77,6 +129,18 @@ func (UnimplementedSysServer) UserInfo(context.Context, *InfoReq) (*InfoResp, er
 }
 func (UnimplementedSysServer) UserAdd(context.Context, *UserAddReq) (*UserAddResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserAdd not implemented")
+}
+func (UnimplementedSysServer) RedisAdd(context.Context, *RedisReq) (*RedisResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RedisAdd not implemented")
+}
+func (UnimplementedSysServer) RedisDelete(context.Context, *RedisReq) (*RedisResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RedisDelete not implemented")
+}
+func (UnimplementedSysServer) RedisUpdate(context.Context, *RedisReq) (*RedisResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RedisUpdate not implemented")
+}
+func (UnimplementedSysServer) RedisGet(context.Context, *RedisReq) (*RedisResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RedisGet not implemented")
 }
 func (UnimplementedSysServer) mustEmbedUnimplementedSysServer() {}
 
@@ -127,6 +191,78 @@ func _Sys_UserAdd_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Sys_RedisAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RedisReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SysServer).RedisAdd(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Sys_RedisAdd_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SysServer).RedisAdd(ctx, req.(*RedisReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Sys_RedisDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RedisReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SysServer).RedisDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Sys_RedisDelete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SysServer).RedisDelete(ctx, req.(*RedisReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Sys_RedisUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RedisReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SysServer).RedisUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Sys_RedisUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SysServer).RedisUpdate(ctx, req.(*RedisReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Sys_RedisGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RedisReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SysServer).RedisGet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Sys_RedisGet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SysServer).RedisGet(ctx, req.(*RedisReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Sys_ServiceDesc is the grpc.ServiceDesc for Sys service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -141,6 +277,22 @@ var Sys_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserAdd",
 			Handler:    _Sys_UserAdd_Handler,
+		},
+		{
+			MethodName: "RedisAdd",
+			Handler:    _Sys_RedisAdd_Handler,
+		},
+		{
+			MethodName: "RedisDelete",
+			Handler:    _Sys_RedisDelete_Handler,
+		},
+		{
+			MethodName: "RedisUpdate",
+			Handler:    _Sys_RedisUpdate_Handler,
+		},
+		{
+			MethodName: "RedisGet",
+			Handler:    _Sys_RedisGet_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
