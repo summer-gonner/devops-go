@@ -9,18 +9,8 @@ import (
 	"time"
 )
 
-// 记录访问日志
-func Log(res http.ResponseWriter, req *http.Request, traceId string) {
-	// 记录请求信息
-	logRequestInfo(req, traceId)
-
-	// 处理响应信息
-	responseRecorder := NewLoggingResponseWriter(res)
-	defer logResponseInfo(responseRecorder)
-}
-
 // 记录请求信息
-func logRequestInfo(req *http.Request, traceId string) {
+func LogRequestInfo(req *http.Request, traceId string) {
 	headersString := logRequestHeaders(req.Header)
 	body, _ := io.ReadAll(req.Body)
 
@@ -87,38 +77,21 @@ func curlifyRequest(method string, headers http.Header, path string, body []byte
 	return curl.String()
 }
 
-// 自定义 ResponseWriter 以捕获响应信息
-type LoggingResponseWriter struct {
-	http.ResponseWriter
-	statusCode int
-	body       []byte
+// LoggingResponse 自定义结构体，用于捕获响应信息
+type LoggingResponse struct {
+	*http.Response        // Embedding http.Response to inherit its methods and fields
+	Body           []byte // Custom field to store response body
 }
 
-// 实现 http.ResponseWriter 接口的 Write 方法
-func (lrw *LoggingResponseWriter) Write(b []byte) (int, error) {
-	if lrw.body == nil {
-		lrw.body = make([]byte, 0)
+func LogResponseInfo(res *http.Response) {
+	log.Printf("响应状态码: %d", res.StatusCode)
+
+	// 读取并打印响应体内容
+	if res.Body != nil {
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			log.Printf("Failed to read response body: %v", err)
+		}
+		log.Printf("响应体: %s", string(body))
 	}
-	lrw.body = append(lrw.body, b...)
-	return lrw.ResponseWriter.Write(b)
-}
-
-// 实现 http.ResponseWriter 接口的 WriteHeader 方法
-func (lrw *LoggingResponseWriter) WriteHeader(statusCode int) {
-	lrw.statusCode = statusCode
-	lrw.ResponseWriter.WriteHeader(statusCode)
-}
-
-// 记录响应信息
-func logResponseInfo(res *LoggingResponseWriter) {
-	log.Printf("响应状态码: %d", res.statusCode)
-
-	if len(res.body) > 0 {
-		log.Printf("响应体: %s", string(res.body))
-	}
-}
-
-// 创建新的 LoggingResponseWriter 实例
-func NewLoggingResponseWriter(res http.ResponseWriter) *LoggingResponseWriter {
-	return &LoggingResponseWriter{ResponseWriter: res}
 }
