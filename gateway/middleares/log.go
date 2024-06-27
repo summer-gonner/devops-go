@@ -1,97 +1,60 @@
 package middleares
 
 import (
+	"bytes"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 )
 
-// 记录请求信息
-func LogRequestInfo(req *http.Request, traceId string) {
-	headersString := logRequestHeaders(req.Header)
-	body, _ := io.ReadAll(req.Body)
+// RequestLoggerMiddleware 中间件：记录请求信息
+func RequestLoggerMiddleware(traceId string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
 
-	log.Printf("[%s] traceId --------> [%s] %s  %s 请求头 --------> %s", time.Now().Format("2006-01-02 15:04:05"), traceId, req.Method, fullRequestURL(req), headersString)
-
-	if len(body) > 0 {
-		log.Printf("请求体--------------> %s", string(body))
-	}
-
-	curlifyRequest(req.Method, req.Header, fullRequestURL(req), body)
-}
-
-// 获取完整的请求URL（包括主机名和端口）
-func fullRequestURL(req *http.Request) string {
-	scheme := "http"
-	if req.TLS != nil {
-		scheme = "https"
-	}
-	return fmt.Sprintf("%s://%s%s", scheme, req.Host, req.URL.Path)
-}
-
-func logRequestHeaders(headers http.Header) string {
-	var headerStrings []string
-
-	for key, values := range headers {
-		for _, value := range values {
-			headerStrings = append(headerStrings, fmt.Sprintf("%s: %s", key, value))
+		// 复制请求体
+		var requestBody []byte
+		if c.Request.Body != nil {
+			requestBody, _ = ioutil.ReadAll(c.Request.Body)
+			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(requestBody))
 		}
-	}
 
-	return strings.Join(headerStrings, ", ")
-}
+		// 执行下一个处理函数
+		c.Next()
 
-// 将HTTP请求转换为Curl命令格式
-func curlifyRequest(method string, headers http.Header, path string, body []byte) string {
-	var curl strings.Builder
+		// 在响应之后记录请求信息
+		latency := time.Since(start)
 
-	curl.WriteString("curl -X ")
-	curl.WriteString(method)
-	curl.WriteString(" '")
-	curl.WriteString(path)
-	curl.WriteString("'")
-
-	headers.Del("Host")
-	for key, values := range headers {
-		for _, value := range values {
-			curl.WriteString(" -H '")
-			curl.WriteString(key)
-			curl.WriteString(": ")
-			curl.WriteString(value)
-			curl.WriteString("'")
+		// 打印请求信息
+		fmt.Printf("[%s] traceId:[%s] %s %s %v\n", time.Now().Format("2006-01-02 15:04:05"), traceId, c.Request.Method, c.Request.URL.Path, latency)
+		fmt.Printf("请求头------------------->")
+		for key, values := range c.Request.Header {
+			for _, value := range values {
+				fmt.Printf("\t%s: %s\n", key, value)
+			}
 		}
+
+		// 打印请求体
+		fmt.Printf("请求体-------------------> %s\n", string(requestBody))
 	}
-
-	if body != nil {
-		requestBody := strings.Replace(string(body), "'", "'\\''", -1)
-
-		curl.WriteString(" --data-binary '")
-		curl.WriteString(requestBody)
-		curl.WriteString("'")
-	}
-
-	log.Printf("Curl Command-------------> %s", curl.String())
-	return curl.String()
 }
 
-// LoggingResponse 自定义结构体，用于捕获响应信息
-type LoggingResponse struct {
-	*http.Response        // Embedding http.Response to inherit its methods and fields
-	Body           []byte // Custom field to store response body
-}
-
-func LogResponseInfo(res *http.Response) {
-	log.Printf("响应状态码: %d", res.StatusCode)
-
-	// 读取并打印响应体内容
-	if res.Body != nil {
-		body, err := io.ReadAll(res.Body)
-		if err != nil {
-			log.Printf("Failed to read response body: %v", err)
-		}
-		log.Printf("响应体: %s", string(body))
+func LogResponse(response *http.Response, traceId string) error {
+	// 读取响应体
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Printf("[%s] Failed to read response body: %v", traceId, err)
+		return err
 	}
+	// 打印或处理响应体
+	log.Printf(" traceId:[%s] 响应体-------------------> %s", traceId, string(body))
+
+	// 将读取的响应体重新设置给 Response.Body
+	response.Body = ioutil.NopCloser(bytes.NewReader(body))
+
+	return nil
 }
