@@ -1,11 +1,6 @@
-package loadbalance
+package round_robin
 
 import "errors"
-
-type RoundRobinBalance struct {
-	curIndex int
-	res      []string
-}
 
 func (r *RoundRobinBalance) Add(params ...string) error {
 	if len(params) == 0 {

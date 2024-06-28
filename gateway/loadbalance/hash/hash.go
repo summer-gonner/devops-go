@@ -1,4 +1,4 @@
-package loadbalance
+package hash
 
 import (
 	"errors"
@@ -6,7 +6,6 @@ import (
 	"log"
 	"sort"
 	"strconv"
-	"sync"
 )
 
 type Hash func([]byte) uint32
@@ -21,14 +20,6 @@ func (s Uint32Slice) Less(i, j int) bool {
 }
 func (s Uint32Slice) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
-}
-
-type ConsistentHashBalance struct {
-	mux      sync.RWMutex
-	hash     Hash              //hash函数
-	replicas int               //复制因子
-	keys     Uint32Slice       //已排序的hash节点切片
-	hashmap  map[uint32]string //key为hash值val为节点
 }
 
 func NewConsistenceHashBalance(replicas int, hash Hash) *ConsistentHashBalance {

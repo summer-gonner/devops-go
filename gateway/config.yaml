@@ -1,3 +1,24 @@
-service_urls:
-  devops-auth: "http://localhost:8081"
-  devops-basicdata: "http://localhost:8082"
+gateway:
+  routes:
+    - id: devops-auth_route
+      uri: devops-auth
+      target: http://localhost:8081
+      predicates:
+        - Path=/devops-auth
+      metadata:
+        # 指定负载均衡策略
+        lb:
+          # 指定Ribbon的负载均衡策略
+          name: RoundRobin
+#    - id: devops-auth_route
+#      uri: devops-basicdata
+#      target: http://localhost:8002
+#      predicates:
+#        - Path=/devops-basicdata
+#      metadata:
+#        # 指定负载均衡策略
+#        lb:
+#          # 指定Ribbon的负载均衡策略
+#          name: RoundRobin
+server:
+  port: 10000

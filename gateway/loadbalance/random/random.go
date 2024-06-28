@@ -1,14 +1,9 @@
-package loadbalance
+package random
 
 import (
 	"errors"
 	"math/rand"
 )
-
-type RandomBalance struct {
-	curIndex int
-	res      []string
-}
 
 func (r *RandomBalance) Add(params ...string) error {
 	if len(params) == 0 {
